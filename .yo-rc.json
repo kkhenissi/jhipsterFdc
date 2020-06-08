@@ -36,7 +36,9 @@
     "dtoSuffix": "DTO",
     "otherModules": [],
     "blueprints": [],
-    "prettierJava": true
+    "prettierJava": true,
+    "herokuAppName": "jhipster-fdc",
+    "herokuDeployType": "git"
   },
   "git-provider": "GitHub",
   "git-company": "kkhenissi",
