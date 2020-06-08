@@ -1,0 +1,81 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="jhipsterFdcApp.fdcUser.home.title">Fdc Users</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-fdc-user" [routerLink]="['/fdc-user/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="jhipsterFdcApp.fdcUser.home.createLabel">
+            Create a new Fdc User
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="fdcUsers?.length === 0">
+        <span jhiTranslate="jhipsterFdcApp.fdcUser.home.notFound">No fdcUsers found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="fdcUsers && fdcUsers.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="firstName"><span jhiTranslate="jhipsterFdcApp.fdcUser.firstName">First Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="lastName"><span jhiTranslate="jhipsterFdcApp.fdcUser.lastName">Last Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="email"><span jhiTranslate="jhipsterFdcApp.fdcUser.email">Email</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="phoneNumber"><span jhiTranslate="jhipsterFdcApp.fdcUser.phoneNumber">Phone Number</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="hireDate"><span jhiTranslate="jhipsterFdcApp.fdcUser.hireDate">Hire Date</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="manager.id"><span jhiTranslate="jhipsterFdcApp.fdcUser.manager">Manager</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="department.id"><span jhiTranslate="jhipsterFdcApp.fdcUser.department">Department</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+                <tr *ngFor="let fdcUser of fdcUsers ;trackBy: trackId">
+                    <td><a [routerLink]="['/fdc-user', fdcUser.id, 'view']">{{ fdcUser.id }}</a></td>
+                    <td>{{ fdcUser.firstName }}</td>
+                    <td>{{ fdcUser.lastName }}</td>
+                    <td>{{ fdcUser.email }}</td>
+                    <td>{{ fdcUser.phoneNumber }}</td>
+                    <td>{{ fdcUser.hireDate | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="fdcUser.manager">
+                            <a [routerLink]="['/fdc-user', fdcUser.manager?.id, 'view']" >{{ fdcUser.manager?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="fdcUser.department">
+                            <a [routerLink]="['/department', fdcUser.department?.id, 'view']" >{{ fdcUser.department?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/fdc-user', fdcUser.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/fdc-user', fdcUser.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(fdcUser)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
