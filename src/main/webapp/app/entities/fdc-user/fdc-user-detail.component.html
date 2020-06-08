@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="fdcUser">
+            <h2><span jhiTranslate="jhipsterFdcApp.fdcUser.detail.title">Fdc User</span> {{ fdcUser.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.firstName" [ngbTooltip]="'jhipsterFdcApp.fdcUser.help.firstName' | translate">First Name</span></dt>
+                <dd>
+                    <span>{{ fdcUser.firstName }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.lastName">Last Name</span></dt>
+                <dd>
+                    <span>{{ fdcUser.lastName }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.email">Email</span></dt>
+                <dd>
+                    <span>{{ fdcUser.email }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.phoneNumber">Phone Number</span></dt>
+                <dd>
+                    <span>{{ fdcUser.phoneNumber }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.hireDate">Hire Date</span></dt>
+                <dd>
+                    <span>{{ fdcUser.hireDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.manager">Manager</span></dt>
+                <dd>
+                    <div *ngIf="fdcUser.manager">
+                        <a [routerLink]="['/fdc-user', fdcUser.manager?.id, 'view']">{{ fdcUser.manager?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.fdcUser.department">Department</span></dt>
+                <dd>
+                    <div *ngIf="fdcUser.department">
+                        <a [routerLink]="['/department', fdcUser.department?.id, 'view']">{{ fdcUser.department?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/fdc-user', fdcUser.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

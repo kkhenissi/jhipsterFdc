@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="job">
+            <h2><span jhiTranslate="jhipsterFdcApp.job.detail.title">Job</span> {{ job.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="jhipsterFdcApp.job.jobTitle">Job Title</span></dt>
+                <dd>
+                    <span>{{ job.jobTitle }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.job.minSalary">Min Salary</span></dt>
+                <dd>
+                    <span>{{ job.minSalary }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.job.maxSalary">Max Salary</span></dt>
+                <dd>
+                    <span>{{ job.maxSalary }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.job.item">Item</span></dt>
+                <dd>
+                    <span *ngFor="let item of job.items; let last = last">
+                        <a [routerLink]="['/item', item?.id, 'view']">{{ item.title }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.job.fdcUser">Fdc User</span></dt>
+                <dd>
+                    <div *ngIf="job.fdcUser">
+                        <a [routerLink]="['/fdc-user', job.fdcUser?.id, 'view']">{{ job.fdcUser?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/job', job.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
