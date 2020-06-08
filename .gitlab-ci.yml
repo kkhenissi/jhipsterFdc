@@ -54,7 +54,7 @@ maven-compile-doc:
   artifacts:
     paths:
       - target/site/
-      - documentation/
+      # - documentation/
     expire_in: 7 day
 
 maven-test:
