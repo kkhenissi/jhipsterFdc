@@ -50,7 +50,7 @@ maven-compile-doc:
   script:
     - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
     - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
-    # - npm run compodoc
+    - npm run compodoc
   artifacts:
     paths:
       - target/site/
