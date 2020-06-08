@@ -47,6 +47,18 @@ public class CacheConfiguration {
             createCache(cm, com.kkhenissi.fdc.domain.User.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.Authority.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.kkhenissi.fdc.domain.Region.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Country.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Location.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Department.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Department.class.getName() + ".fdcUsers");
+            createCache(cm, com.kkhenissi.fdc.domain.Item.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Item.class.getName() + ".jobs");
+            createCache(cm, com.kkhenissi.fdc.domain.FdcUser.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.FdcUser.class.getName() + ".jobs");
+            createCache(cm, com.kkhenissi.fdc.domain.Job.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Job.class.getName() + ".items");
+            createCache(cm, com.kkhenissi.fdc.domain.JobHistory.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

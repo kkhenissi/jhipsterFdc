@@ -1,0 +1,32 @@
+{
+  "jhipsterFdcApp": {
+    "fdcUser": {
+      "home": {
+        "title": "FdcUsers",
+        "createLabel": "Créer un nouveau Fdc User",
+        "createOrEditLabel": "Créer ou éditer un Fdc User",
+        "notFound": "Aucun Fdc User trouvé"
+      },
+      "created": "Un nouveau Fdc User a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Fdc User avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Fdc User avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Fdc User {{ id }} ?"
+      },
+      "detail": {
+        "title": "Fdc User"
+      },
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "hireDate": "Hire Date",
+      "job": "Job",
+      "manager": "Manager",
+      "department": "Department",
+      "help": {
+        "firstName": "The firstname attribute."
+      }
+    }
+  }
+}
