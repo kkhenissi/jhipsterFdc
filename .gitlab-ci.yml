@@ -10,12 +10,22 @@ build:
   artifacts:
     paths:
       - fidecoin/
-postman_tests:
-  stage: test
-  image:
-    name: postman/newman_alpine33
-    entrypoint: ['']
-  script:
-    - echo "Testing ...."
-    - newman --version
-    - test -f "fidecoin/info.txt"
+    maven-test:
+      stage: test-and-package
+      dependencies: []
+      script:
+        - mkdir -p /tmp/STS
+        - mkdir -p /tmp/LTS
+        - ./mvnw dependency:get -Dartifact=com.h2database:h2:1.4.199 -Dmaven.repo.local=$MAVEN_USER_HOME
+        - ./mvnw -Dmaven.repo.local=$MAVEN_USER_HOME  &
+        - ./gitlab-ci-data/waitServer.sh  http://localhost:8080 600s
+      artifacts:
+        when: always
+        reports:
+          junit: target/test-results/**/TEST-*.xml
+        expose_as: 'mvn test results'
+        paths:
+          - target/test-results
+          - target/jacoco
+          - target/cucumber-html-reports
+        expire_in: 7 day
