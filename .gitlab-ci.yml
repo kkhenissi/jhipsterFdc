@@ -5,9 +5,9 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   IMAGE_COMPOSE: $CI_REGISTRY_IMAGE/docker-compose:1.0
   IMAGE_CENTOS_JRE: $CI_REGISTRY_IMAGE/centos-jre11:1.1
-  IMAGE_ARCHV_MGN_TEST: $CI_REGISTRY_IMAGE/arch-mgn-test:1.0
+  # IMAGE_FDC_TEST: $CI_REGISTRY_IMAGE/fdc-test:1.0
   DOCKER_COMPOSE_VERSION: 1.24.1
-  DEPLOY_HOST: and-ads-am-01.akka.eu
+  # DEPLOY_HOST: and-ads-am-01.akka.eu
 
 cache:
   key:
@@ -117,16 +117,16 @@ maven-package:
   dependencies: []
   script:
     - ./mvnw verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-    - mkdir -p target/archivemanager/testData/src/test/ target/archivemanager/testData/target target/archivemanager/volumes/config archivemanager/volumes/LTS_data archivemanager/volumes/STS_data archivemanager/volumes/postgresql_data
-    - cp src/main/docker/docker-compose.yml  src/main/docker/launch.sh  target/archivemanager
+    - mkdir -p target/fidecoin/testData/src/test/ target/fidecoin/testData/target target/fidecoin/volumes/config fidecoin/volumes/LTS_data fidecoin/volumes/STS_data fidecoin/volumes/postgresql_data
+    - cp src/main/docker/docker-compose.yml  src/main/docker/launch.sh  target/fidecoin
     - sed -i "s/\${CI_COMMIT_REF_SLUG}/${CI_COMMIT_REF_SLUG}/" src/main/docker/launch.sh
-    - cp target/archivemanager*-tests.jar target/archivemanager/testData/target/
-    - cp src/main/resources/config/application-prod.yml src/main/resources/logback-spring.xml target/archivemanager/volumes/config
-    - cp -R src/test/java target/archivemanager/testData/src/test/
+    - cp target/fidecoin*-tests.jar target/fidecoin/testData/target/
+    - cp src/main/resources/config/application-prod.yml src/main/resources/logback-spring.xml target/fidecoin/volumes/config
+    - cp -R src/test/java target/fidecoin/testData/src/test/
   artifacts:
     paths:
       - target/*.jar
-      - target/archivemanager/
+      # - target/fidecoin/
       - target/classes
     expire_in: 7 day
 
@@ -144,14 +144,14 @@ docker-push:
   image: docker:latest
   before_script:
     - echo "no before_script"
-  script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - cd docker-base//docker-compose/
-    - ./build.sh -t ${IMAGE_COMPOSE} && docker push ${IMAGE_COMPOSE}
-    - cd ../centos-java11
-    - ./build.sh -t ${IMAGE_CENTOS_JRE} && docker push ${IMAGE_CENTOS_JRE}
-    - cd ../arch-mgn-test
-    - ./build.sh -t ${IMAGE_ARCHV_MGN_TEST} && docker push ${IMAGE_ARCHV_MGN_TEST}
+  # script:
+  #   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  #   - cd docker-base//docker-compose/
+  #   - ./build.sh -t ${IMAGE_COMPOSE} && docker push ${IMAGE_COMPOSE}
+  #   - cd ../centos-java11
+  #   - ./build.sh -t ${IMAGE_CENTOS_JRE} && docker push ${IMAGE_CENTOS_JRE}
+  #   - cd ../fdc-test
+  #   - ./build.sh -t ${IMAGE_FDC_TEST} && docker push ${IMAGE_FDC_TEST}
 
 docker-base:
   extends: .docker-base
@@ -174,30 +174,30 @@ Livraison:
   before_script:
     - echo "no before_script"
   script:
-    - if [ ! -z "$PROXY" ] ; then
-    - export http_proxy=$PROXY
-    - export https_proxy=$PROXY
-    - export no_proxy=$NO_PROXY
-    - fi
-    - cd target
-    - chmod a+x archivemanager/launch.sh
-    - curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/run.sh -o archivemanager//docker-compose
-    - chmod a+x archivemanager/docker-compose
-    - docker rmi archivemanager:${CI_COMMIT_REF_SLUG} || true
-    - docker rmi ${IMAGE_TAG} || true
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull ${IMAGE_TAG}
-    - docker tag ${IMAGE_TAG} archivemanager:${CI_COMMIT_REF_SLUG}
-    - docker pull postgres:12.1
-    - docker pull docker/compose:${DOCKER_COMPOSE_VERSION}
-    - docker pull $IMAGE_ARCHV_MGN_TEST
-    - docker tag $IMAGE_ARCHV_MGN_TEST arch-mgn-test:1.0
-    - docker save -o archivemanager/images.tar archivemanager:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 arch-mgn-test:1.0
-    - tar cvzf ../archivemanager.tgz archivemanager
+    # - if [ ! -z "$PROXY" ] ; then
+    # - export http_proxy=$PROXY
+    # - export https_proxy=$PROXY
+    # - export no_proxy=$NO_PROXY
+    # - fi
+    # - cd target
+    # - chmod a+x fidecoin/launch.sh
+    # - curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/run.sh -o fidecoin//docker-compose
+    # - chmod a+x fidecoin/docker-compose
+    # - docker rmi fidecoin:${CI_COMMIT_REF_SLUG} || true
+    # - docker rmi ${IMAGE_TAG} || true
+    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # - docker pull ${IMAGE_TAG}
+    # - docker tag ${IMAGE_TAG} fidecoin:${CI_COMMIT_REF_SLUG}
+    # - docker pull postgres:12.1
+    # - docker pull docker/compose:${DOCKER_COMPOSE_VERSION}
+    # - docker pull $IMAGE_FDC_TEST
+    # - docker tag $IMAGE_FDC_TEST fdc-test:1.0
+    # - docker save -o fidecoin/images.tar fidecoin:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 fdc-test:1.0
+    # - tar cvzf ../fidecoin.tgz fidecoin
   artifacts:
     name: Livraison_$CI_COMMIT_REF_NAME
     paths:
-      - archivemanager.tgz
+      - fidecoin.tgz
     expire_in: 7 day
 
 .deploy_template:
@@ -209,38 +209,38 @@ Livraison:
   before_script:
     - echo "no before_script"
   script:
-    - chmod a+x gitlab-ci-data/decal_port.sh
-    - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
-    - echo "DECAL_PORT=$DECAL_PORT"
-    - DYNAMIC_ENVIRONMENT_URL="https://${DEPLOY_HOST}:${DECAL_PORT}443" # In script, get the environment URL.
-    - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env # Add the value to a dotenv file.
-    - tar xvzf archivemanager.tgz
-    - export VOLUMES_ARCHIVEMANAGER_PATH="/tmp/${CI_COMMIT_REF_SLUG}"
-    - export KEY_STORE_PASSWORD=password
-    - export TAG_ARCH_MGN=${CI_COMMIT_REF_SLUG}
-    - cd archivemanager/
-    - chmod a+x ./launch.sh
-    - sed -i "s/443:8080/${DECAL_PORT:-""}443:8080/" docker-compose.yml
-    - sed -i "s/5432:5432/${DECAL_PORT:-""}5432:5432/" docker-compose.yml
-    - docker-compose down -v
-    - docker run --rm -v /tmp:/temp alpine rm -rf /temp/${CI_COMMIT_REF_SLUG}
-    - docker run --rm -v /tmp:/temp alpine mkdir -p /temp/${CI_COMMIT_REF_SLUG}/logs  /temp/${CI_COMMIT_REF_SLUG}/config/tls   /temp/${CI_COMMIT_REF_SLUG}/LTS   /temp/${CI_COMMIT_REF_SLUG}/STS
-    - docker run --rm -v /tmp:/temp alpine chmod -R a+rw /temp/${CI_COMMIT_REF_SLUG}/
-    - ./launch.sh --without-postgres-pass --without-started-test  --project-name ${CI_COMMIT_REF_SLUG}
-    - echo "curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health"
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 20
-    - curl --insecure  --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health
+    # - chmod a+x gitlab-ci-data/decal_port.sh
+    # - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
+    # - echo "DECAL_PORT=$DECAL_PORT"
+    # - DYNAMIC_ENVIRONMENT_URL="https://${DEPLOY_HOST}:${DECAL_PORT}443" # In script, get the environment URL.
+    # - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env # Add the value to a dotenv file.
+    # # - tar xvzf fidecoin.tgz
+    # # - export VOLUMES_fidecoin_PATH="/tmp/${CI_COMMIT_REF_SLUG}"
+    # - export KEY_STORE_PASSWORD=password
+    # - export TAG_ARCH_MGN=${CI_COMMIT_REF_SLUG}
+    # - cd fidecoin/
+    # - chmod a+x ./launch.sh
+    # - sed -i "s/443:8080/${DECAL_PORT:-""}443:8080/" docker-compose.yml
+    # - sed -i "s/5432:5432/${DECAL_PORT:-""}5432:5432/" docker-compose.yml
+    # - docker-compose down -v
+    # - docker run --rm -v /tmp:/temp alpine rm -rf /temp/${CI_COMMIT_REF_SLUG}
+    # - docker run --rm -v /tmp:/temp alpine mkdir -p /temp/${CI_COMMIT_REF_SLUG}/logs  /temp/${CI_COMMIT_REF_SLUG}/config/tls   /temp/${CI_COMMIT_REF_SLUG}/LTS   /temp/${CI_COMMIT_REF_SLUG}/STS
+    # - docker run --rm -v /tmp:/temp alpine chmod -R a+rw /temp/${CI_COMMIT_REF_SLUG}/
+    # - ./launch.sh --without-postgres-pass --without-started-test  --project-name ${CI_COMMIT_REF_SLUG}
+    # - echo "curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health"
+    # - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
+    # - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
+    # - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
+    # - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
+    # - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 20
+    # - curl --insecure  --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health
   artifacts:
     reports:
       dotenv: deploy.env # Report back dotenv file to rails.
   environment:
-    name: archivemanager/$CI_COMMIT_REF_NAME
-    url: $DYNAMIC_ENVIRONMENT_URL #uncomment after gitlab 12.9
-    on_stop: stop_archivemanager
+    # name: fidecoin/$CI_COMMIT_REF_NAME
+    # url: $DYNAMIC_ENVIRONMENT_URL #uncomment after gitlab 12.9
+    # on_stop: stop_fidecoin
 
 deploy:
   extends: .deploy_template
@@ -254,64 +254,63 @@ deploy:
 deploy_manual:
   extends: .deploy_template
   when: manual
+# stop_fidecoin:
+#   image: $IMAGE_COMPOSE
+#   stage: deploy
+#   cache: {}
+#   dependencies:
+#     - Livraison
+#   variables:
+#     GIT_STRATEGY: none
+#   before_script:
+#     - echo "no before_script"
+# script:
+#   - echo "Remove fidecoin deployement app"
+#   - tar xvzf fidecoin.tgz
+#   - cd fidecoin
+#   - docker-compose down -v
+# when: manual
+#   environment:
+#     name: fidecoin/$CI_COMMIT_REF_NAME
+#     action: stop
 
-stop_archivemanager:
-  image: $IMAGE_COMPOSE
-  stage: deploy
-  cache: {}
-  dependencies:
-    - Livraison
-  variables:
-    GIT_STRATEGY: none
-  before_script:
-    - echo "no before_script"
-  script:
-    - echo "Remove archivemanager deployement app"
-    - tar xvzf archivemanager.tgz
-    - cd archivemanager
-    - docker-compose down -v
-  when: manual
-  environment:
-    name: archivemanager/$CI_COMMIT_REF_NAME
-    action: stop
+# .perf_template:
+#   stage: perf
+#   image: $IMAGE_COMPOSE
+#   cache: {}
+#   dependencies: []
+#   variables:
+#     TARGET_URL: https://$DEPLOY_HOST
+#     STS_PATH: /tmp/STS
+#     CONTNER_NAME: Gatling_$CI_COMMIT_REF_SLUG
+#   before_script:
+#     - echo "no before_script"
+#   script:
+#     - chmod a+x gitlab-ci-data/decal_port.sh
+#     - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
+#     - echo "DECAL_PORT=$DECAL_PORT"
+#     - export TARGET_URL=https://$DEPLOY_HOST:${DECAL_PORT}443
+#     - docker stop $CONTNER_NAME || true
+#     - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_FDC_TEST tail -f /dev/null
+#     - docker exec  $CONTNER_NAME mkdir -p /home/jhipster/app/src/test/
+#     - docker cp  ./src/test/gatling $CONTNER_NAME:/home/jhipster/app/src/test/gatling
+#     - docker exec -e TARGET_URL -e STS_PATH  $CONTNER_NAME bash -c "./src/test/gatling/launch.sh"
+#     - mkdir -p target
+#     - docker cp  $CONTNER_NAME:/home/jhipster/app/target/test-results/gatling target/test-results-gatling
+#     - docker stop $CONTNER_NAME || true
+#   artifacts:
+#     paths:
+#       - target/test-results-gatling/
+#     expire_in: 7 day
 
-.perf_template:
-  stage: perf
-  image: $IMAGE_COMPOSE
-  cache: {}
-  dependencies: []
-  variables:
-    TARGET_URL: https://$DEPLOY_HOST
-    STS_PATH: /tmp/STS
-    CONTNER_NAME: Gatling_$CI_COMMIT_REF_SLUG
-  before_script:
-    - echo "no before_script"
-  script:
-    - chmod a+x gitlab-ci-data/decal_port.sh
-    - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
-    - echo "DECAL_PORT=$DECAL_PORT"
-    - export TARGET_URL=https://$DEPLOY_HOST:${DECAL_PORT}443
-    - docker stop $CONTNER_NAME || true
-    - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_ARCHV_MGN_TEST tail -f /dev/null
-    - docker exec  $CONTNER_NAME mkdir -p /home/jhipster/app/src/test/
-    - docker cp  ./src/test/gatling $CONTNER_NAME:/home/jhipster/app/src/test/gatling
-    - docker exec -e TARGET_URL -e STS_PATH  $CONTNER_NAME bash -c "./src/test/gatling/launch.sh"
-    - mkdir -p target
-    - docker cp  $CONTNER_NAME:/home/jhipster/app/target/test-results/gatling target/test-results-gatling
-    - docker stop $CONTNER_NAME || true
-  artifacts:
-    paths:
-      - target/test-results-gatling/
-    expire_in: 7 day
+# perf:
+#   extends: .perf_template
+#   only:
+#     refs:
+#       - master
+#       - develop
+#       - /^release.*$/i
 
-perf:
-  extends: .perf_template
-  only:
-    refs:
-      - master
-      - develop
-      - /^release.*$/i
-
-perf_manual:
-  extends: .perf_template
-  when: manual
+# perf_manual:
+#   extends: .perf_template
+#   when: manual
