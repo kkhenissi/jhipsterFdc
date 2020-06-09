@@ -1,31 +1,14 @@
 stages:
   - build
   - test-and-package
-build:
+maven-compile-doc:
   stage: build
   script:
-    - echo "Building ...."
-    - mkdir fidecoin
-    - touch fidecoin/info.txt
+    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
+    - npm run compodoc
   artifacts:
     paths:
-      - fidecoin/
-    maven-test:
-      stage: test-and-package
-      dependencies: []
-      script:
-        - mkdir -p /tmp/STS
-        - mkdir -p /tmp/LTS
-        - ./mvnw dependency:get -Dartifact=com.h2database:h2:1.4.199 -Dmaven.repo.local=$MAVEN_USER_HOME
-        - ./mvnw -Dmaven.repo.local=$MAVEN_USER_HOME  &
-        - ./gitlab-ci-data/waitServer.sh  http://localhost:8080 600s
-      artifacts:
-        when: always
-        reports:
-          junit: target/test-results/**/TEST-*.xml
-        expose_as: 'mvn test results'
-        paths:
-          - target/test-results
-          - target/jacoco
-          - target/cucumber-html-reports
-        expire_in: 7 day
+      - target/site/
+      - documentation/
+    expire_in: 7 day
