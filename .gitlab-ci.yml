@@ -7,6 +7,9 @@ build:
     - echo "Building ...."
     - mkdir fidecoin
     - touch fidecoin/info.txt
+  artifacts:
+    paths:
+      - fidecoin/
 test:
   stage: test
   script:
