@@ -4,7 +4,7 @@ stages:
 maven-compile-doc:
   stage: build
   script:
-    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw compile
     - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
     - npm run compodoc
   artifacts:
