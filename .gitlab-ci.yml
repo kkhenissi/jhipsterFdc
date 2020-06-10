@@ -5,7 +5,7 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   IMAGE_COMPOSE: $CI_REGISTRY_IMAGE/docker-compose:1.0
   IMAGE_CENTOS_JRE: $CI_REGISTRY_IMAGE/centos-jre11:1.1
-  IMAGE_FDC__TEST: $CI_REGISTRY_IMAGE/arch-mgn-test:1.0
+  IMAGE_FDC_TEST: $CI_REGISTRY_IMAGE/fdc-test:1.0
   DOCKER_COMPOSE_VERSION: 1.24.1
 #   DEPLOY_HOST: and-ads-am-01.akka.eu
 
@@ -150,8 +150,8 @@ docker-push:
     - ./build.sh -t ${IMAGE_COMPOSE} && docker push ${IMAGE_COMPOSE}
     - cd ../centos-java11
     - ./build.sh -t ${IMAGE_CENTOS_JRE} && docker push ${IMAGE_CENTOS_JRE}
-    - cd ../arch-mgn-test
-    - ./build.sh -t ${IMAGE_FDC__TEST} && docker push ${IMAGE_FDC__TEST}
+    - cd ../fdc-test
+    - ./build.sh -t ${IMAGE_FDC_TEST} && docker push ${IMAGE_FDC_TEST}
 
 docker-base:
   extends: .docker-base
@@ -190,9 +190,9 @@ Livraison:
     - docker tag ${IMAGE_TAG} fidecoin:${CI_COMMIT_REF_SLUG}
     - docker pull postgres:12.1
     - docker pull docker/compose:${DOCKER_COMPOSE_VERSION}
-    - docker pull $IMAGE_FDC__TEST
-    - docker tag $IMAGE_FDC__TEST arch-mgn-test:1.0
-    - docker save -o fidecoin/images.tar fidecoin:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 arch-mgn-test:1.0
+    - docker pull $IMAGE_FDC_TEST
+    - docker tag $IMAGE_FDC_TEST fdc-test:1.0
+    - docker save -o fidecoin/images.tar fidecoin:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 fdc-test:1.0
     - tar cvzf ../fidecoin.tgz fidecoin
   artifacts:
     name: Livraison_$CI_COMMIT_REF_NAME
@@ -217,7 +217,7 @@ Livraison:
     - tar xvzf fidecoin.tgz
     - export VOLUMES_fidecoin_PATH="/tmp/${CI_COMMIT_REF_SLUG}"
     - export KEY_STORE_PASSWORD=password
-    - export TAG_ARCH_MGN=${CI_COMMIT_REF_SLUG}
+    - export TAG_FDC=${CI_COMMIT_REF_SLUG}
     - cd fidecoin/
     - chmod a+x ./launch.sh
     - sed -i "s/443:8080/${DECAL_PORT:-""}443:8080/" docker-compose.yml
@@ -292,7 +292,7 @@ stop_fidecoin:
     - echo "DECAL_PORT=$DECAL_PORT"
     - export TARGET_URL=https://:${DECAL_PORT}443
     - docker stop $CONTNER_NAME || true
-    - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_FDC__TEST tail -f /dev/null
+    - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_FDC_TEST tail -f /dev/null
     - docker exec  $CONTNER_NAME mkdir -p /home/jhipster/app/src/test/
     - docker cp  ./src/test/gatling $CONTNER_NAME:/home/jhipster/app/src/test/gatling
     - docker exec -e TARGET_URL -e STS_PATH  $CONTNER_NAME bash -c "./src/test/gatling/launch.sh"
