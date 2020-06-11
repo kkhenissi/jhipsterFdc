@@ -1,0 +1,49 @@
+{
+  "name": "UserFdc",
+  "fields": [
+    {
+      "fieldName": "userNameUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "firstNameUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastNameUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "emailUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "passwordUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dateRegistrationUser",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "avatarUser",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "statusUser",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20200611175206",
+  "entityTableName": "user_fdc",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

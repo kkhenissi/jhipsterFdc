@@ -1,0 +1,22 @@
+{
+  "jhipsterFdcApp": {
+    "productItem": {
+      "home": {
+        "title": "ProductItems",
+        "createLabel": "Créer un nouveau Product Item",
+        "createOrEditLabel": "Créer ou éditer un Product Item",
+        "notFound": "Aucun Product Item trouvé"
+      },
+      "created": "Un nouveau Product Item a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Product Item avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Product Item avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Product Item {{ id }} ?"
+      },
+      "detail": {
+        "title": "Product Item"
+      },
+      "quantityItem": "Quantity Item"
+    }
+  }
+}

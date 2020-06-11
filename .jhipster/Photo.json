@@ -1,0 +1,25 @@
+{
+  "name": "Photo",
+  "fields": [
+    {
+      "fieldName": "namePhoto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descriptionPhoto",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20200611174906",
+  "entityTableName": "photo",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
