@@ -15,6 +15,11 @@
         "fdcUser": "Fdc User",
         "job": "Job",
         "jobHistory": "Job History",
+        "product": "Product",
+        "productItem": "Product Item",
+        "category": "Category",
+        "photo": "Photo",
+        "userFdc": "User Fdc",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

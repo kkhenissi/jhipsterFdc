@@ -29,7 +29,6 @@
     }
   ],
   "changelogDate": "20200608132229",
-  "javadoc": "Task entity.\\n@author The JHipster team.",
   "entityTableName": "item",
   "dto": "no",
   "pagination": "no",

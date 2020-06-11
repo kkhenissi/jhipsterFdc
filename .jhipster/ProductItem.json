@@ -1,0 +1,21 @@
+{
+  "name": "ProductItem",
+  "fields": [
+    {
+      "fieldName": "quantityItem",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20200611174355",
+  "entityTableName": "product_item",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

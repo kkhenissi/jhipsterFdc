@@ -1,7 +1,6 @@
 package com.kkhenissi.fdc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,9 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Task entity.\n@author The JHipster team.
+ * A Item.
  */
-@ApiModel(description = "Task entity.\n@author The JHipster team.")
 @Entity
 @Table(name = "item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

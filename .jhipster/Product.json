@@ -1,0 +1,30 @@
+{
+  "name": "Product",
+  "fields": [
+    {
+      "fieldName": "nameProduct",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descriptionProduct",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "priceProduct",
+      "fieldType": "Double"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20200611174255",
+  "javadoc": "Task entity.\\n@author The JHipster team.",
+  "entityTableName": "product",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
