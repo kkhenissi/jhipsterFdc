@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="jhipsterFdcApp.userFdc.home.title">User Fdcs</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-user-fdc" [routerLink]="['/user-fdc/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="jhipsterFdcApp.userFdc.home.createLabel">
+            Create a new User Fdc
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="userFdcs?.length === 0">
+        <span jhiTranslate="jhipsterFdcApp.userFdc.home.notFound">No userFdcs found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="userFdcs && userFdcs.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.userNameUser">User Name User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.firstNameUser">First Name User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.lastNameUser">Last Name User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.emailUser">Email User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.passwordUser">Password User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.dateRegistrationUser">Date Registration User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.avatarUser">Avatar User</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.userFdc.statusUser">Status User</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let userFdc of userFdcs ;trackBy: trackId">
+                    <td><a [routerLink]="['/user-fdc', userFdc.id, 'view']">{{ userFdc.id }}</a></td>
+                    <td>{{ userFdc.userNameUser }}</td>
+                    <td>{{ userFdc.firstNameUser }}</td>
+                    <td>{{ userFdc.lastNameUser }}</td>
+                    <td>{{ userFdc.emailUser }}</td>
+                    <td>{{ userFdc.passwordUser }}</td>
+                    <td>{{ userFdc.dateRegistrationUser | date:'medium' }}</td>
+                    <td>{{ userFdc.avatarUser }}</td>
+                    <td>{{ userFdc.statusUser }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/user-fdc', userFdc.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/user-fdc', userFdc.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(userFdc)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
