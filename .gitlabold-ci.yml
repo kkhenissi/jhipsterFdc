@@ -1,0 +1,14 @@
+stages:
+  - build
+  - test-and-package
+maven-compile-doc:
+  stage: build
+  script:
+    - ./mvnw compile
+    - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
+    - npm run compodoc
+  artifacts:
+    paths:
+      - target/site/
+      - documentation/
+    expire_in: 7 day

@@ -1,317 +1,88 @@
 image: jhipster/jhipster:v6.9.1
 
-variables:
-  REGISTRY_URL: $CI_REGISTRY
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  IMAGE_COMPOSE: $CI_REGISTRY_IMAGE/docker-compose:1.0
-  IMAGE_CENTOS_JRE: $CI_REGISTRY_IMAGE/centos-jre11:1.1
-  IMAGE_FDC_TEST: $CI_REGISTRY_IMAGE/fdc-test:1.0
-  DOCKER_COMPOSE_VERSION: 1.24.1
-#   DEPLOY_HOST: and-ads-am-01.akka.eu
-
 cache:
-  key:
-    files:
-      - pom.xml
-      - package.json #so that jobs of all branch always use the same cache if used the same dependenties
+  key: '$CI_COMMIT_REF_NAME'
   paths:
     - .maven/
-    - .npm/
-    - node/
-    - target/classes/
-
 stages:
-  - pre-build
+  - check
   - build
-  - test-and-package
-  - release
-  - pre-liv
-  - deploy
+  - test
   - analyze
-  - perf
-
+  - package
+  - release
+  - deploy
 before_script:
   - export NG_CLI_ANALYTICS="false"
-  - export MAVEN_USER_HOME=${CI_PROJECT_DIR}/.maven
-  - if [ ! -z "$PROXY" ] ; then
-  - gitlab-ci-data/proxy_config_file_create.sh
-  - export http_proxy=$PROXY
-  - export https_proxy=$PROXY
-  - export no_proxy=$NO_PROXY
-  - fi
-  - rm -rf ${HOME}/.npm
-  - mkdir -p ${CI_PROJECT_DIR}/.npm
-  - ln -s ${CI_PROJECT_DIR}/.npm ${HOME}/.npm
-  - ./mvnw com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v10.16.3 -DnpmVersion=6.11.3 -Dmaven.repo.local=$MAVEN_USER_HOME
-  - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
+  - export MAVEN_USER_HOME=`pwd`/.maven
 
-maven-compile-doc:
+nohttp:
+  stage: check
+  script:
+    - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
+
+maven-compile:
   stage: build
   script:
-    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./mvnw javadoc:javadoc -Dmaven.repo.local=$MAVEN_USER_HOME
-    - npm run compodoc
+    - ./mvnw -ntp compile -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
   artifacts:
     paths:
-      - target/site/
-      - documentation/
-    expire_in: 7 day
+      - target/classes/
+      - target/generated-sources/
+    expire_in: 1 day
 
 maven-test:
-  stage: test-and-package
-  dependencies: []
+  # DinD service is required for Testcontainers
+  services:
+    - docker:dind
+
+  variables:
+    # Instruct Testcontainers to use the daemon of DinD.
+    DOCKER_HOST: 'tcp://docker:2375'
+    # Improve performance with overlayfs.
+    DOCKER_DRIVER: overlay2
+
+  stage: test
   script:
-    - mkdir -p /tmp/STS
-    - mkdir -p /tmp/LTS
-    - ./mvnw dependency:get -Dartifact=com.h2database:h2:1.4.199 -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./mvnw -Dmaven.repo.local=$MAVEN_USER_HOME  &
-    - ./gitlab-ci-data/waitServer.sh  http://localhost:8080 600s
-    - ./mvnw verify -Dmaven.repo.local=$MAVEN_USER_HOME -DargLine="-Dkarate.env=ci"
+    - ./mvnw -ntp verify -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME -Dspring.profiles.active=testcontainers
   artifacts:
-    when: always
     reports:
       junit: target/test-results/**/TEST-*.xml
-    expose_as: 'mvn test results'
     paths:
       - target/test-results
       - target/jacoco
-      - target/cucumber-html-reports
-    expire_in: 7 day
+    expire_in: 1 day
 
 frontend-test:
-  stage: test-and-package
-  dependencies: []
+  stage: test
   script:
-    - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
+    - npm install
+    - npm test
   artifacts:
-    when: always
     reports:
       junit: target/test-results/TESTS-results-jest.xml
-    expose_as: 'frontend test results'
     paths:
       - target/test-results
       - target/jacoco
-    expire_in: 7 day
-
-sonar-analyze:
-  stage: analyze
-  dependencies:
-    - maven-test
-    - frontend-test
-  only:
-    variables:
-      - $SONAR_URL
-  script:
-    - ./mvnw compile -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent initialize sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./script/calculDependency.sh
-  artifacts:
-    when: on_failure
-    expire_in: 7 day
-    paths:
-      - target/dependencies
-  allow_failure: true
+    expire_in: 1 day
 
 maven-package:
-  stage: test-and-package
-  dependencies: []
+  stage: package
   script:
-    - ./mvnw verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-    - mkdir -p target/fidecoin/testData/src/test/ target/fidecoin/testData/target target/fidecoin/volumes/config fidecoin/volumes/LTS_data fidecoin/volumes/STS_data fidecoin/volumes/postgresql_data
-    - cp src/main/docker/docker-compose.yml  src/main/docker/launch.sh  target/fidecoin
-    - sed -i "s/\${CI_COMMIT_REF_SLUG}/${CI_COMMIT_REF_SLUG}/" src/main/docker/launch.sh
-    - cp target/fidecoin*-tests.jar target/fidecoin/testData/target/
-    - cp src/main/resources/config/application-prod.yml src/main/resources/logback-spring.xml target/fidecoin/volumes/config
-    - cp -R src/test/java target/fidecoin/testData/src/test/
+    - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
   artifacts:
     paths:
       - target/*.jar
-      - target/fidecoin/
       - target/classes
-    expire_in: 7 day
+    expire_in: 1 day
+# Uncomment the following line to use gitlabs container registry. You need to adapt the REGISTRY_URL in case you are not using gitlab.com
+#docker-push:
+#    stage: release
+#    variables:
+#        REGISTRY_URL: registry.gitlab.com
+#        IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA
+#    dependencies:
+#        - maven-package
+#    script:
+#        - ./mvnw -ntp compile jib:build -Pprod -Djib.to.image=$IMAGE_TAG -Djib.to.auth.username=gitlab-ci-token  -Djib.to.auth.password=$CI_BUILD_TOKEN -Dmaven.repo.local=$MAVEN_USER_HOME
 
-docker-push:
-  stage: release
-  dependencies:
-    - maven-package
-  script:
-    - ./mvnw jib:build -Djib.from.image=$IMAGE_CENTOS_JRE -Djib.to.image=$IMAGE_TAG -Djib.from.auth.username=gitlab-ci-token  -Djib.from.auth.password=$CI_JOB_TOKEN -Djib.to.auth.username=gitlab-ci-token  -Djib.to.auth.password=$CI_JOB_TOKEN -Dgit_sha1=${CI_COMMIT_SHA}  -Dmaven.repo.local=$MAVEN_USER_HOME
-
-.docker-base:
-  stage: pre-build
-  cache: {}
-  dependencies: []
-  image: docker:latest
-  before_script:
-    - echo "no before_script"
-  script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - cd docker-base//docker-compose/
-    - ./build.sh -t ${IMAGE_COMPOSE} && docker push ${IMAGE_COMPOSE}
-    - cd ../centos-java11
-    - ./build.sh -t ${IMAGE_CENTOS_JRE} && docker push ${IMAGE_CENTOS_JRE}
-    - cd ../fdc-test
-    - ./build.sh -t ${IMAGE_FDC_TEST} && docker push ${IMAGE_FDC_TEST}
-
-docker-base:
-  extends: .docker-base
-  only:
-    changes:
-      - docker-base/**/*
-      - .gitlab-ci.yml
-
-docker-base-manual:
-  extends: .docker-base
-  when: manual
-
-Livraison:
-  stage: pre-liv
-  cache: {}
-  image: $IMAGE_COMPOSE
-  #TODO services: dind and DOCKER_HOST
-  dependencies:
-    - maven-package
-  before_script:
-    - echo "no before_script"
-  script:
-    - if [ ! -z "$PROXY" ] ; then
-    - export http_proxy=$PROXY
-    - export https_proxy=$PROXY
-    - export no_proxy=$NO_PROXY
-    - fi
-    - cd target
-    - chmod a+x fidecoin/launch.sh
-    - curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/run.sh -o fidecoin//docker-compose
-    - chmod a+x fidecoin/docker-compose
-    - docker rmi fidecoin:${CI_COMMIT_REF_SLUG} || true
-    - docker rmi ${IMAGE_TAG} || true
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull ${IMAGE_TAG}
-    - docker tag ${IMAGE_TAG} fidecoin:${CI_COMMIT_REF_SLUG}
-    - docker pull postgres:12.1
-    - docker pull docker/compose:${DOCKER_COMPOSE_VERSION}
-    - docker pull $IMAGE_FDC_TEST
-    - docker tag $IMAGE_FDC_TEST fdc-test:1.0
-    - docker save -o fidecoin/images.tar fidecoin:${CI_COMMIT_REF_SLUG} docker.io/docker/compose:${DOCKER_COMPOSE_VERSION} docker.io/jhipster/jhipster:v6.3.1 docker.io/postgres:12.1 fdc-test:1.0
-    - tar cvzf ../fidecoin.tgz fidecoin
-  artifacts:
-    name: Livraison_$CI_COMMIT_REF_NAME
-    paths:
-      - fidecoin.tgz
-    expire_in: 7 day
-
-.deploy_template:
-  stage: deploy
-  cache: {}
-  image: $IMAGE_COMPOSE
-  dependencies:
-    - Livraison
-  before_script:
-    - echo "no before_script"
-  script:
-    - chmod a+x gitlab-ci-data/decal_port.sh
-    - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
-    - echo "DECAL_PORT=$DECAL_PORT"
-    - DYNAMIC_ENVIRONMENT_URL="https://${DECAL_PORT}443" # In script, get the environment URL.
-    - echo "DYNAMIC_ENVIRONMENT_URL=$DYNAMIC_ENVIRONMENT_URL" >> deploy.env # Add the value to a dotenv file.
-    - tar xvzf fidecoin.tgz
-    - export VOLUMES_fidecoin_PATH="/tmp/${CI_COMMIT_REF_SLUG}"
-    - export KEY_STORE_PASSWORD=password
-    - export TAG_FDC=${CI_COMMIT_REF_SLUG}
-    - cd fidecoin/
-    - chmod a+x ./launch.sh
-    - sed -i "s/443:8080/${DECAL_PORT:-""}443:8080/" docker-compose.yml
-    - sed -i "s/5432:5432/${DECAL_PORT:-""}5432:5432/" docker-compose.yml
-    - docker-compose down -v
-    - docker run --rm -v /tmp:/temp alpine rm -rf /temp/${CI_COMMIT_REF_SLUG}
-    - docker run --rm -v /tmp:/temp alpine mkdir -p /temp/${CI_COMMIT_REF_SLUG}/logs  /temp/${CI_COMMIT_REF_SLUG}/config/tls   /temp/${CI_COMMIT_REF_SLUG}/LTS   /temp/${CI_COMMIT_REF_SLUG}/STS
-    - docker run --rm -v /tmp:/temp alpine chmod -R a+rw /temp/${CI_COMMIT_REF_SLUG}/
-    - ./launch.sh --without-postgres-pass --without-started-test  --project-name ${CI_COMMIT_REF_SLUG}
-    - echo "curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health"
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 10
-    - curl --insecure --silent --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health || sleep 20
-    - curl --insecure  --fail  ${DYNAMIC_ENVIRONMENT_URL}/management/health
-  artifacts:
-    reports:
-      dotenv: deploy.env # Report back dotenv file to rails.
-  environment:
-    name: fidecoin/$CI_COMMIT_REF_NAME
-    url: $DYNAMIC_ENVIRONMENT_URL #uncomment after gitlab 12.9
-    on_stop: stop_fidecoin
-
-deploy:
-  extends: .deploy_template
-  only:
-    refs:
-      - master
-      - develop
-      - /^release.*$/i
-      - /^testDeploy.*$/
-
-deploy_manual:
-  extends: .deploy_template
-  when: manual
-
-stop_fidecoin:
-  image: $IMAGE_COMPOSE
-  stage: deploy
-  cache: {}
-  dependencies:
-    - Livraison
-  variables:
-    GIT_STRATEGY: none
-  before_script:
-    - echo "no before_script"
-  script:
-    - echo "Remove fidecoin deployement app"
-    - tar xvzf fidecoin.tgz
-    - cd fidecoin
-    - docker-compose down -v
-  when: manual
-  environment:
-    name: fidecoin/$CI_COMMIT_REF_NAME
-    action: stop
-
-.perf_template:
-  stage: perf
-  image: $IMAGE_COMPOSE
-  cache: {}
-  dependencies: []
-  variables:
-    TARGET_URL: https://
-    STS_PATH: /tmp/STS
-    CONTNER_NAME: Gatling_$CI_COMMIT_REF_SLUG
-  before_script:
-    - echo "no before_script"
-  script:
-    - chmod a+x gitlab-ci-data/decal_port.sh
-    - DECAL_PORT=$(gitlab-ci-data/decal_port.sh)
-    - echo "DECAL_PORT=$DECAL_PORT"
-    - export TARGET_URL=https://:${DECAL_PORT}443
-    - docker stop $CONTNER_NAME || true
-    - docker run --rm -d -v /tmp/STS:/home/STS -w /home/jhipster/app/ --name "$CONTNER_NAME"  $IMAGE_FDC_TEST tail -f /dev/null
-    - docker exec  $CONTNER_NAME mkdir -p /home/jhipster/app/src/test/
-    - docker cp  ./src/test/gatling $CONTNER_NAME:/home/jhipster/app/src/test/gatling
-    - docker exec -e TARGET_URL -e STS_PATH  $CONTNER_NAME bash -c "./src/test/gatling/launch.sh"
-    - mkdir -p target
-    - docker cp  $CONTNER_NAME:/home/jhipster/app/target/test-results/gatling target/test-results-gatling
-    - docker stop $CONTNER_NAME || true
-  artifacts:
-    paths:
-      - target/test-results-gatling/
-    expire_in: 7 day
-
-perf:
-  extends: .perf_template
-  only:
-    refs:
-      - master
-      - develop
-      - /^release.*$/i
-
-perf_manual:
-  extends: .perf_template
-  when: manual
