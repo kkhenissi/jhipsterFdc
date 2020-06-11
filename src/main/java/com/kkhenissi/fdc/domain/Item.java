@@ -1,6 +1,7 @@
 package com.kkhenissi.fdc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -36,6 +37,14 @@ public class Item implements Serializable {
 
     @Column(name = "status_item")
     private Boolean statusItem;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Photo photos;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "items", allowSetters = true)
+    private Category category;
 
     @ManyToMany(mappedBy = "items")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -101,6 +110,32 @@ public class Item implements Serializable {
 
     public void setStatusItem(Boolean statusItem) {
         this.statusItem = statusItem;
+    }
+
+    public Photo getPhotos() {
+        return photos;
+    }
+
+    public Item photos(Photo photo) {
+        this.photos = photo;
+        return this;
+    }
+
+    public void setPhotos(Photo photo) {
+        this.photos = photo;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public Item category(Category category) {
+        this.category = category;
+        return this;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Set<Job> getJobs() {
