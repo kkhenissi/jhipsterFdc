@@ -1,0 +1,131 @@
+entity Region {
+	regionName String
+}
+
+entity Country {
+	countryName String
+}
+
+// an ignored comment
+/** not an ignored comment */
+entity Location {
+	streetAddress String,
+	postalCode String,
+	city String,
+	stateProvince String
+}
+
+entity Department {
+	departmentName String required
+}
+
+ 
+ 
+/*==============================================================*/
+/* Table : Category                                             */
+/*==============================================================*/
+entity Category {
+  nameCategory  String,
+}
+
+
+entity Photo {
+   namePhoto            String,
+   descriptionPhoto     String,
+}
+entity Item {
+	title String,
+	description String,
+    currentPrice Double,
+    statusItem Boolean
+}
+
+/**
+ * The User entity.
+ */
+entity FdcUser {
+	/**
+	* The firstname attribute.
+	*/
+	firstName String,
+	lastName String,
+	email String,
+	phoneNumber String,
+	hireDate Instant,
+ 
+}
+ 
+
+entity Job {
+	jobTitle String,
+	minSalary Long,
+	maxSalary Long
+}
+
+entity JobHistory {
+	startDate Instant,
+	endDate Instant,
+	language Language
+}
+
+enum Language {
+    FRENCH, ENGLISH, SPANISH
+}
+
+relationship OneToOne {
+	Country{region} to Region
+}
+relationship ManyToOne {
+	Item{category} to Category
+}
+relationship OneToMany {
+	Item{photos} to Photo
+}
+relationship OneToOne {
+	Location{country} to Country
+}
+
+relationship OneToOne {
+	Department{location} to Location
+}
+
+relationship ManyToMany {
+	Job{item(title)} to Item{job}
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	FdcUser to Job{fdcUser},
+	/**
+	* A relationship
+	*/
+	Department to
+	/**
+	* Another side of the same relationship
+	*/
+	FdcUser{department}
+}
+
+relationship ManyToOne {
+	FdcUser{manager} to FdcUser
+}
+
+// defining multiple oneToOne relationships
+relationship OneToOne {
+	JobHistory{job} to Job,
+	JobHistory{department} to Department,
+	JobHistory{fdcUser} to FdcUser
+}
+
+// Set pagination options
+paginate JobHistory, FdcUser with infinite-scroll
+paginate Job with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except FdcUser, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
