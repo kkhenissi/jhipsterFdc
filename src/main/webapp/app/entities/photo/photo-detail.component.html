@@ -1,0 +1,34 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="photo">
+            <h2><span jhiTranslate="jhipsterFdcApp.photo.detail.title">Photo</span> {{ photo.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="jhipsterFdcApp.photo.namePhoto">Name Photo</span></dt>
+                <dd>
+                    <span>{{ photo.namePhoto }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.photo.descriptionPhoto">Description Photo</span></dt>
+                <dd>
+                    <span>{{ photo.descriptionPhoto }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/photo', photo.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

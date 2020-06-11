@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="userFdc">
+            <h2><span jhiTranslate="jhipsterFdcApp.userFdc.detail.title">User Fdc</span> {{ userFdc.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.userNameUser">User Name User</span></dt>
+                <dd>
+                    <span>{{ userFdc.userNameUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.firstNameUser">First Name User</span></dt>
+                <dd>
+                    <span>{{ userFdc.firstNameUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.lastNameUser">Last Name User</span></dt>
+                <dd>
+                    <span>{{ userFdc.lastNameUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.emailUser">Email User</span></dt>
+                <dd>
+                    <span>{{ userFdc.emailUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.passwordUser">Password User</span></dt>
+                <dd>
+                    <span>{{ userFdc.passwordUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.dateRegistrationUser">Date Registration User</span></dt>
+                <dd>
+                    <span>{{ userFdc.dateRegistrationUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.avatarUser">Avatar User</span></dt>
+                <dd>
+                    <span>{{ userFdc.avatarUser }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.userFdc.statusUser">Status User</span></dt>
+                <dd>
+                    <span>{{ userFdc.statusUser }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/user-fdc', userFdc.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
