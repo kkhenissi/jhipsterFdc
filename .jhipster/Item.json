@@ -20,6 +20,21 @@
   ],
   "relationships": [
     {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "photo",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "photos",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "category",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "category",
+      "otherEntityField": "id"
+    },
+    {
       "relationshipType": "many-to-many",
       "otherEntityName": "job",
       "otherEntityRelationshipName": "item",

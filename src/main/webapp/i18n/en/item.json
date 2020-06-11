@@ -20,6 +20,8 @@
       "description": "Description",
       "currentPrice": "Current Price",
       "statusItem": "Status Item",
+      "photos": "Photos",
+      "category": "Category",
       "job": "Job"
     }
   }
