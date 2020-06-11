@@ -1,0 +1,29 @@
+{
+  "jhipsterFdcApp": {
+    "userFdc": {
+      "home": {
+        "title": "UserFdcs",
+        "createLabel": "Créer un nouveau User Fdc",
+        "createOrEditLabel": "Créer ou éditer un User Fdc",
+        "notFound": "Aucun User Fdc trouvé"
+      },
+      "created": "Un nouveau User Fdc a été créé avec l'identifiant {{ param }}",
+      "updated": "Le User Fdc avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le User Fdc avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le User Fdc {{ id }} ?"
+      },
+      "detail": {
+        "title": "User Fdc"
+      },
+      "userNameUser": "User Name User",
+      "firstNameUser": "First Name User",
+      "lastNameUser": "Last Name User",
+      "emailUser": "Email User",
+      "passwordUser": "Password User",
+      "dateRegistrationUser": "Date Registration User",
+      "avatarUser": "Avatar User",
+      "statusUser": "Status User"
+    }
+  }
+}

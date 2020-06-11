@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-user-fdc-heading" jhiTranslate="jhipsterFdcApp.userFdc.home.createOrEditLabel">Create or edit a User Fdc</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.userNameUser" for="field_userNameUser">User Name User</label>
+                    <input type="text" class="form-control" name="userNameUser" id="field_userNameUser"
+                           formControlName="userNameUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.firstNameUser" for="field_firstNameUser">First Name User</label>
+                    <input type="text" class="form-control" name="firstNameUser" id="field_firstNameUser"
+                           formControlName="firstNameUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.lastNameUser" for="field_lastNameUser">Last Name User</label>
+                    <input type="text" class="form-control" name="lastNameUser" id="field_lastNameUser"
+                           formControlName="lastNameUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.emailUser" for="field_emailUser">Email User</label>
+                    <input type="text" class="form-control" name="emailUser" id="field_emailUser"
+                           formControlName="emailUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.passwordUser" for="field_passwordUser">Password User</label>
+                    <input type="text" class="form-control" name="passwordUser" id="field_passwordUser"
+                           formControlName="passwordUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.dateRegistrationUser" for="field_dateRegistrationUser">Date Registration User</label>
+                    <div class="d-flex">
+                        <input id="field_dateRegistrationUser" type="datetime-local" class="form-control" name="dateRegistrationUser" formControlName="dateRegistrationUser" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.avatarUser" for="field_avatarUser">Avatar User</label>
+                    <input type="text" class="form-control" name="avatarUser" id="field_avatarUser"
+                           formControlName="avatarUser"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.userFdc.statusUser" for="field_statusUser">Status User</label>
+                    <input type="checkbox" class="form-control" name="statusUser" id="field_statusUser"
+                           formControlName="statusUser"/>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
