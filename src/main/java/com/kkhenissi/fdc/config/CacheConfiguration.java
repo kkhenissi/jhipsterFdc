@@ -64,6 +64,7 @@ public class CacheConfiguration {
             createCache(cm, com.kkhenissi.fdc.domain.Category.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.Photo.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.UserFdc.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Item.class.getName() + ".photos");
             // jhipster-needle-ehcache-add-entry
         };
     }

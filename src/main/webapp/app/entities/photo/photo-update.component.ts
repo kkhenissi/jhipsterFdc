@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 
 import { IPhoto, Photo } from 'app/shared/model/photo.model';
 import { PhotoService } from './photo.service';
+import { IItem } from 'app/shared/model/item.model';
+import { ItemService } from 'app/entities/item/item.service';
 
 @Component({
   selector: 'jhi-photo-update',
@@ -14,18 +16,27 @@ import { PhotoService } from './photo.service';
 })
 export class PhotoUpdateComponent implements OnInit {
   isSaving = false;
+  items: IItem[] = [];
 
   editForm = this.fb.group({
     id: [],
     namePhoto: [],
     descriptionPhoto: [],
+    item: [],
   });
 
-  constructor(protected photoService: PhotoService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected photoService: PhotoService,
+    protected itemService: ItemService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ photo }) => {
       this.updateForm(photo);
+
+      this.itemService.query().subscribe((res: HttpResponse<IItem[]>) => (this.items = res.body || []));
     });
   }
 
@@ -34,6 +45,7 @@ export class PhotoUpdateComponent implements OnInit {
       id: photo.id,
       namePhoto: photo.namePhoto,
       descriptionPhoto: photo.descriptionPhoto,
+      item: photo.item,
     });
   }
 
@@ -57,6 +69,7 @@ export class PhotoUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       namePhoto: this.editForm.get(['namePhoto'])!.value,
       descriptionPhoto: this.editForm.get(['descriptionPhoto'])!.value,
+      item: this.editForm.get(['item'])!.value,
     };
   }
 
@@ -74,5 +87,9 @@ export class PhotoUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: IItem): any {
+    return item.id;
   }
 }

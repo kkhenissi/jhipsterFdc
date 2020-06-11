@@ -10,7 +10,15 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "item",
+      "otherEntityRelationshipName": "photos",
+      "relationshipName": "item",
+      "otherEntityField": "id"
+    }
+  ],
   "changelogDate": "20200611174906",
   "entityTableName": "photo",
   "dto": "no",

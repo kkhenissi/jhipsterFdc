@@ -78,7 +78,7 @@ relationship OneToOne {
 relationship ManyToOne {
 	Item{category} to Category
 }
-relationship OneToOne {
+relationship OneToMany {
 	Item{photos} to Photo
 }
 relationship OneToOne {

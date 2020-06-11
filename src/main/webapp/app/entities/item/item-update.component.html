@@ -36,14 +36,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.item.photos" for="field_photos">Photos</label>
-                    <select class="form-control" id="field_photos" name="photos" formControlName="photos">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="photoOption.id === editForm.get('photos')!.value?.id ? editForm.get('photos')!.value : photoOption" *ngFor="let photoOption of photos; trackBy: trackById">{{ photoOption.id }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="jhipsterFdcApp.item.category" for="field_category">Category</label>
                     <select class="form-control" id="field_category" name="category" formControlName="category">
                         <option [ngValue]="null"></option>

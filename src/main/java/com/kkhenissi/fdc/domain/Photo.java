@@ -1,5 +1,6 @@
 package com.kkhenissi.fdc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,6 +28,10 @@ public class Photo implements Serializable {
 
     @Column(name = "description_photo")
     private String descriptionPhoto;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "photos", allowSetters = true)
+    private Item item;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -61,6 +66,19 @@ public class Photo implements Serializable {
 
     public void setDescriptionPhoto(String descriptionPhoto) {
         this.descriptionPhoto = descriptionPhoto;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public Photo item(Item item) {
+        this.item = item;
+        return this;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

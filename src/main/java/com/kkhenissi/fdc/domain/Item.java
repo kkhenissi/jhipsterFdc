@@ -38,9 +38,9 @@ public class Item implements Serializable {
     @Column(name = "status_item")
     private Boolean statusItem;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Photo photos;
+    @OneToMany(mappedBy = "item")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Photo> photos = new HashSet<>();
 
     @ManyToOne
     @JsonIgnoreProperties(value = "items", allowSetters = true)
@@ -112,17 +112,29 @@ public class Item implements Serializable {
         this.statusItem = statusItem;
     }
 
-    public Photo getPhotos() {
+    public Set<Photo> getPhotos() {
         return photos;
     }
 
-    public Item photos(Photo photo) {
-        this.photos = photo;
+    public Item photos(Set<Photo> photos) {
+        this.photos = photos;
         return this;
     }
 
-    public void setPhotos(Photo photo) {
-        this.photos = photo;
+    public Item addPhotos(Photo photo) {
+        this.photos.add(photo);
+        photo.setItem(this);
+        return this;
+    }
+
+    public Item removePhotos(Photo photo) {
+        this.photos.remove(photo);
+        photo.setItem(null);
+        return this;
+    }
+
+    public void setPhotos(Set<Photo> photos) {
+        this.photos = photos;
     }
 
     public Category getCategory() {

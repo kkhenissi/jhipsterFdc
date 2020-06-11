@@ -27,7 +27,6 @@
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.item.description">Description</span></th>
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.item.currentPrice">Current Price</span></th>
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.item.statusItem">Status Item</span></th>
-                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.item.photos">Photos</span></th>
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.item.category">Category</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -39,11 +38,6 @@
                     <td>{{ item.description }}</td>
                     <td>{{ item.currentPrice }}</td>
                     <td>{{ item.statusItem }}</td>
-                    <td>
-                        <div *ngIf="item.photos">
-                            <a [routerLink]="['/photo', item.photos?.id, 'view']" >{{ item.photos?.id }}</a>
-                        </div>
-                    </td>
                     <td>
                         <div *ngIf="item.category">
                             <a [routerLink]="['/category', item.category?.id, 'view']" >{{ item.category?.id }}</a>
