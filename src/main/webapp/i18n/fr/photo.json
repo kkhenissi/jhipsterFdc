@@ -17,7 +17,8 @@
         "title": "Photo"
       },
       "namePhoto": "Name Photo",
-      "descriptionPhoto": "Description Photo"
+      "descriptionPhoto": "Description Photo",
+      "item": "Item"
     }
   }
 }

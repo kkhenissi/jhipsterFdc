@@ -16,6 +16,12 @@
                 <dd>
                     <span>{{ photo.descriptionPhoto }}</span>
                 </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.photo.item">Item</span></dt>
+                <dd>
+                    <div *ngIf="photo.item">
+                        <a [routerLink]="['/item', photo.item?.id, 'view']">{{ photo.item?.id }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

@@ -8,7 +8,7 @@ export interface IItem {
   description?: string;
   currentPrice?: number;
   statusItem?: boolean;
-  photos?: IPhoto;
+  photos?: IPhoto[];
   category?: ICategory;
   jobs?: IJob[];
 }
@@ -20,7 +20,7 @@ export class Item implements IItem {
     public description?: string,
     public currentPrice?: number,
     public statusItem?: boolean,
-    public photos?: IPhoto,
+    public photos?: IPhoto[],
     public category?: ICategory,
     public jobs?: IJob[]
   ) {

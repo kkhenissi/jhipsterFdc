@@ -24,12 +24,6 @@
                 <dd>
                     <span>{{ item.statusItem }}</span>
                 </dd>
-                <dt><span jhiTranslate="jhipsterFdcApp.item.photos">Photos</span></dt>
-                <dd>
-                    <div *ngIf="item.photos">
-                        <a [routerLink]="['/photo', item.photos?.id, 'view']">{{ item.photos?.id }}</a>
-                    </div>
-                </dd>
                 <dt><span jhiTranslate="jhipsterFdcApp.item.category">Category</span></dt>
                 <dd>
                     <div *ngIf="item.category">

@@ -25,6 +25,7 @@
                     <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.photo.namePhoto">Name Photo</span></th>
                     <th scope="col" ><span jhiTranslate="jhipsterFdcApp.photo.descriptionPhoto">Description Photo</span></th>
+                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.photo.item">Item</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -33,6 +34,11 @@
                     <td><a [routerLink]="['/photo', photo.id, 'view']">{{ photo.id }}</a></td>
                     <td>{{ photo.namePhoto }}</td>
                     <td>{{ photo.descriptionPhoto }}</td>
+                    <td>
+                        <div *ngIf="photo.item">
+                            <a [routerLink]="['/item', photo.item?.id, 'view']" >{{ photo.item?.id }}</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
