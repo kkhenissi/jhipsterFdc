@@ -19,18 +19,8 @@ entity Department {
 	departmentName String required
 }
 
-/**
- * Task entity.
- * @author The JHipster team.
- */
-entity Product {
-   nameProduct          String,
-   descriptionProduct   String,
-   priceProduct         Double
-} 
-entity ProductItem{
-   quantityItem   Integer,
-}
+ 
+ 
 /*==============================================================*/
 /* Table : Category                                             */
 /*==============================================================*/
@@ -64,16 +54,7 @@ entity FdcUser {
 	hireDate Instant,
  
 }
-entity UserFdc {
-   userNameUser         String,
-   firstNameUser        String,
-   lastNameUser         String,
-   emailUser            String,
-   passwordUser         String,
-   dateRegistrationUser Instant,
-   avatarUser           String,
-   statusUser           Boolean,
-}
+ 
 
 entity Job {
 	jobTitle String,
@@ -94,7 +75,12 @@ enum Language {
 relationship OneToOne {
 	Country{region} to Region
 }
-
+relationship ManyToOne {
+	Item{category} to Category
+}
+relationship OneToOne {
+	Item{photos} to Photo
+}
 relationship OneToOne {
 	Location{country} to Country
 }
