@@ -20,6 +20,8 @@
         "category": "Category",
         "photo": "Photo",
         "userFdc": "User Fdc",
+        "brand": "Brand",
+        "subCategory": "Sub Category",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

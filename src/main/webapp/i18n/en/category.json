@@ -16,7 +16,9 @@
       "detail": {
         "title": "Category"
       },
-      "nameCategory": "Name Category"
+      "name": "Name",
+      "status": "Status",
+      "subcategory": "Subcategory"
     }
   }
 }

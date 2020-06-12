@@ -16,9 +16,14 @@
       "detail": {
         "title": "Product"
       },
-      "nameProduct": "Name Product",
-      "descriptionProduct": "Description Product",
-      "priceProduct": "Price Product"
+      "name": "Name",
+      "description": "Description",
+      "image": "Image",
+      "price": "Price",
+      "size": "Size",
+      "availableUntil": "Available Until",
+      "subcategory": "Subcategory",
+      "brand": "Brand"
     }
   }
 }

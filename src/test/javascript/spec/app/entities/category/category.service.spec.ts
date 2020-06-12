@@ -2,6 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CategoryService } from 'app/entities/category/category.service';
 import { ICategory, Category } from 'app/shared/model/category.model';
+import { CategoryStatus } from 'app/shared/model/enumerations/category-status.model';
 
 describe('Service Tests', () => {
   describe('Category Service', () => {
@@ -20,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(CategoryService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Category(0, 'AAAAAAA');
+      elemDefault = new Category(0, 'AAAAAAA', CategoryStatus.AVAILABLE);
     });
 
     describe('Service methods', () => {
@@ -54,7 +55,8 @@ describe('Service Tests', () => {
       it('should update a Category', () => {
         const returnedFromService = Object.assign(
           {
-            nameCategory: 'BBBBBB',
+            name: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );
@@ -71,7 +73,8 @@ describe('Service Tests', () => {
       it('should return a list of Category', () => {
         const returnedFromService = Object.assign(
           {
-            nameCategory: 'BBBBBB',
+            name: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );

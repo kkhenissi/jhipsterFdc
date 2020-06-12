@@ -12,21 +12,72 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.nameProduct" for="field_nameProduct">Name Product</label>
-                    <input type="text" class="form-control" name="nameProduct" id="field_nameProduct"
-                           formControlName="nameProduct"/>
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.name" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.descriptionProduct" for="field_descriptionProduct">Description Product</label>
-                    <input type="text" class="form-control" name="descriptionProduct" id="field_descriptionProduct"
-                           formControlName="descriptionProduct"/>
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                           formControlName="description"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.priceProduct" for="field_priceProduct">Price Product</label>
-                    <input type="number" class="form-control" name="priceProduct" id="field_priceProduct"
-                           formControlName="priceProduct"/>
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.image" for="field_image">Image</label>
+                    <div>
+                        <img [src]="'data:' + editForm.get('imageContentType')!.value + ';base64,' + editForm.get('image')!.value" style="max-height: 100px;" *ngIf="editForm.get('image')!.value" alt="product image"/>
+                        <div *ngIf="editForm.get('image')!.value" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{ editForm.get('imageContentType')!.value }}, {{ byteSize(editForm.get('image')!.value) }}</span>
+                            <button type="button" (click)="clearInputImage('image', 'imageContentType', 'file_image')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon icon="times"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_image" (change)="setFileData($event, 'image', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="image" id="field_image"
+                           formControlName="image"/>
+                    <input type="hidden" class="form-control" name="imageContentType" id="field_imageContentType"
+                           formControlName="imageContentType" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.price" for="field_price">Price</label>
+                    <input type="number" class="form-control" name="price" id="field_price"
+                           formControlName="price"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.size" for="field_size">Size</label>
+                    <select class="form-control" name="size" formControlName="size" id="field_size">
+                        <option value="S">{{ 'jhipsterFdcApp.Size.S' | translate }}</option>
+                        <option value="M">{{ 'jhipsterFdcApp.Size.M' | translate }}</option>
+                        <option value="L">{{ 'jhipsterFdcApp.Size.L' | translate }}</option>
+                        <option value="XL">{{ 'jhipsterFdcApp.Size.XL' | translate }}</option>
+                        <option value="XXL">{{ 'jhipsterFdcApp.Size.XXL' | translate }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.availableUntil" for="field_availableUntil">Available Until</label>
+                    <div class="d-flex">
+                        <input id="field_availableUntil" type="datetime-local" class="form-control" name="availableUntil" formControlName="availableUntil" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="jhipsterFdcApp.product.subcategory" for="field_subcategories">Subcategory</label>
+                    <select class="form-control" id="field_subcategories" multiple name="subcategories" formControlName="subcategories">
+                        <option [ngValue]="getSelected(editForm.get('subcategories')!.value, subCategoryOption)" *ngFor="let subCategoryOption of subcategories; trackBy: trackById">{{ subCategoryOption.name }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterFdcApp.product.brand" for="field_brand">Brand</label>
+                    <select class="form-control" id="field_brand" name="brand" formControlName="brand">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="brandOption.id === editForm.get('brand')!.value?.id ? editForm.get('brand')!.value : brandOption" *ngFor="let brandOption of brands; trackBy: trackById">{{ brandOption.name }}</option>
+                    </select>
                 </div>
             </div>
 

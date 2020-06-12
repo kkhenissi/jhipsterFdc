@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
@@ -16,23 +18,56 @@ export class ProductService {
   constructor(protected http: HttpClient) {}
 
   create(product: IProduct): Observable<EntityResponseType> {
-    return this.http.post<IProduct>(this.resourceUrl, product, { observe: 'response' });
+    const copy = this.convertDateFromClient(product);
+    return this.http
+      .post<IProduct>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   update(product: IProduct): Observable<EntityResponseType> {
-    return this.http.put<IProduct>(this.resourceUrl, product, { observe: 'response' });
+    const copy = this.convertDateFromClient(product);
+    return this.http
+      .put<IProduct>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IProduct>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<IProduct>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IProduct[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<IProduct[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  protected convertDateFromClient(product: IProduct): IProduct {
+    const copy: IProduct = Object.assign({}, product, {
+      availableUntil: product.availableUntil && product.availableUntil.isValid() ? product.availableUntil.toJSON() : undefined,
+    });
+    return copy;
+  }
+
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      res.body.availableUntil = res.body.availableUntil ? moment(res.body.availableUntil) : undefined;
+    }
+    return res;
+  }
+
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach((product: IProduct) => {
+        product.availableUntil = product.availableUntil ? moment(product.availableUntil) : undefined;
+      });
+    }
+    return res;
   }
 }

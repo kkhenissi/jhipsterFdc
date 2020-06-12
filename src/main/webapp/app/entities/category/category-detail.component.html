@@ -8,9 +8,13 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="jhipsterFdcApp.category.nameCategory">Name Category</span></dt>
+                <dt><span jhiTranslate="jhipsterFdcApp.category.name">Name</span></dt>
                 <dd>
-                    <span>{{ category.nameCategory }}</span>
+                    <span>{{ category.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.category.status">Status</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'jhipsterFdcApp.CategoryStatus.' + category.status }}">{{ category.status }}</span>
                 </dd>
             </dl>
 

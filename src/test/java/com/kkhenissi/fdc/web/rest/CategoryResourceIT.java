@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.kkhenissi.fdc.domain.enumeration.CategoryStatus;
 /**
  * Integration tests for the {@link CategoryResource} REST controller.
  */
@@ -30,8 +31,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class CategoryResourceIT {
 
-    private static final String DEFAULT_NAME_CATEGORY = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_CATEGORY = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final CategoryStatus DEFAULT_STATUS = CategoryStatus.AVAILABLE;
+    private static final CategoryStatus UPDATED_STATUS = CategoryStatus.RESTRICTED;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -55,7 +59,8 @@ public class CategoryResourceIT {
      */
     public static Category createEntity(EntityManager em) {
         Category category = new Category()
-            .nameCategory(DEFAULT_NAME_CATEGORY);
+            .name(DEFAULT_NAME)
+            .status(DEFAULT_STATUS);
         return category;
     }
     /**
@@ -66,7 +71,8 @@ public class CategoryResourceIT {
      */
     public static Category createUpdatedEntity(EntityManager em) {
         Category category = new Category()
-            .nameCategory(UPDATED_NAME_CATEGORY);
+            .name(UPDATED_NAME)
+            .status(UPDATED_STATUS);
         return category;
     }
 
@@ -89,7 +95,8 @@ public class CategoryResourceIT {
         List<Category> categoryList = categoryRepository.findAll();
         assertThat(categoryList).hasSize(databaseSizeBeforeCreate + 1);
         Category testCategory = categoryList.get(categoryList.size() - 1);
-        assertThat(testCategory.getNameCategory()).isEqualTo(DEFAULT_NAME_CATEGORY);
+        assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testCategory.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -123,7 +130,8 @@ public class CategoryResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(category.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nameCategory").value(hasItem(DEFAULT_NAME_CATEGORY)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
     
     @Test
@@ -137,7 +145,8 @@ public class CategoryResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(category.getId().intValue()))
-            .andExpect(jsonPath("$.nameCategory").value(DEFAULT_NAME_CATEGORY));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
     @Test
     @Transactional
@@ -160,7 +169,8 @@ public class CategoryResourceIT {
         // Disconnect from session so that the updates on updatedCategory are not directly saved in db
         em.detach(updatedCategory);
         updatedCategory
-            .nameCategory(UPDATED_NAME_CATEGORY);
+            .name(UPDATED_NAME)
+            .status(UPDATED_STATUS);
 
         restCategoryMockMvc.perform(put("/api/categories")
             .contentType(MediaType.APPLICATION_JSON)
@@ -171,7 +181,8 @@ public class CategoryResourceIT {
         List<Category> categoryList = categoryRepository.findAll();
         assertThat(categoryList).hasSize(databaseSizeBeforeUpdate);
         Category testCategory = categoryList.get(categoryList.size() - 1);
-        assertThat(testCategory.getNameCategory()).isEqualTo(UPDATED_NAME_CATEGORY);
+        assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testCategory.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

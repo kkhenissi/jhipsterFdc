@@ -2,25 +2,54 @@
   "name": "Product",
   "fields": [
     {
-      "fieldName": "nameProduct",
+      "fieldName": "name",
       "fieldType": "String"
     },
     {
-      "fieldName": "descriptionProduct",
+      "fieldName": "description",
       "fieldType": "String"
     },
     {
-      "fieldName": "priceProduct",
-      "fieldType": "Double"
+      "fieldName": "image",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "size",
+      "fieldType": "Size",
+      "fieldValues": "S,M,L,XL,XXL"
+    },
+    {
+      "fieldName": "availableUntil",
+      "fieldType": "Instant"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "subCategory",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "subcategory",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "brand",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "brand",
+      "otherEntityField": "name"
+    }
+  ],
   "changelogDate": "20200611174606",
-  "javadoc": "Task entity.\\n@author The JHipster team.",
   "entityTableName": "product",
   "dto": "no",
-  "pagination": "no",
-  "service": "serviceImpl",
+  "pagination": "infinite-scroll",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,

@@ -1,14 +1,31 @@
 package com.kkhenissi.fdc.service;
 
 import com.kkhenissi.fdc.domain.Product;
+import com.kkhenissi.fdc.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 /**
- * Service Interface for managing {@link Product}.
+ * Service Implementation for managing {@link Product}.
  */
-public interface ProductService {
+@Service
+@Transactional
+public class ProductService {
+
+    private final Logger log = LoggerFactory.getLogger(ProductService.class);
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     /**
      * Save a product.
@@ -16,28 +33,52 @@ public interface ProductService {
      * @param product the entity to save.
      * @return the persisted entity.
      */
-    Product save(Product product);
+    public Product save(Product product) {
+        log.debug("Request to save Product : {}", product);
+        return productRepository.save(product);
+    }
 
     /**
      * Get all the products.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    List<Product> findAll();
+    @Transactional(readOnly = true)
+    public Page<Product> findAll(Pageable pageable) {
+        log.debug("Request to get all Products");
+        return productRepository.findAll(pageable);
+    }
 
 
     /**
-     * Get the "id" product.
+     * Get all the products with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<Product> findAllWithEagerRelationships(Pageable pageable) {
+        return productRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
+     * Get one product by id.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<Product> findOne(Long id);
+    @Transactional(readOnly = true)
+    public Optional<Product> findOne(Long id) {
+        log.debug("Request to get Product : {}", id);
+        return productRepository.findOneWithEagerRelationships(id);
+    }
 
     /**
-     * Delete the "id" product.
+     * Delete the product by id.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    public void delete(Long id) {
+        log.debug("Request to delete Product : {}", id);
+        productRepository.deleteById(id);
+    }
 }

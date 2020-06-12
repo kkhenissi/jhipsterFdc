@@ -56,6 +56,14 @@ import { RouterModule } from '@angular/router';
         path: 'user-fdc',
         loadChildren: () => import('./user-fdc/user-fdc.module').then(m => m.JhipsterFdcUserFdcModule),
       },
+      {
+        path: 'brand',
+        loadChildren: () => import('./brand/brand.module').then(m => m.JhipsterFdcBrandModule),
+      },
+      {
+        path: 'sub-category',
+        loadChildren: () => import('./sub-category/sub-category.module').then(m => m.JhipsterFdcSubCategoryModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],
