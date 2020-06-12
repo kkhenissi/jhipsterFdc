@@ -2,16 +2,28 @@
   "name": "Category",
   "fields": [
     {
-      "fieldName": "nameCategory",
+      "fieldName": "name",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "CategoryStatus",
+      "fieldValues": "AVAILABLE,RESTRICTED,DISABLED"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "subCategory",
+      "otherEntityRelationshipName": "category",
+      "relationshipName": "subcategory"
+    }
+  ],
   "changelogDate": "20200611174806",
   "entityTableName": "category",
   "dto": "no",
-  "pagination": "no",
-  "service": "serviceImpl",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,

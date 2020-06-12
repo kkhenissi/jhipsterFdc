@@ -1,0 +1,25 @@
+{
+  "jhipsterFdcApp": {
+    "brand": {
+      "home": {
+        "title": "Brands",
+        "createLabel": "Créer un nouveau Brand",
+        "createOrEditLabel": "Créer ou éditer un Brand",
+        "notFound": "Aucun Brand trouvé"
+      },
+      "created": "Un nouveau Brand a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Brand avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Brand avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Brand {{ id }} ?"
+      },
+      "detail": {
+        "title": "Brand"
+      },
+      "name": "Name",
+      "startDate": "Start Date",
+      "product": "Product",
+      "user": "User"
+    }
+  }
+}

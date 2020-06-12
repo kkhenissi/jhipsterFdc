@@ -40,6 +40,7 @@ export const categoryRoute: Routes = [
     component: CategoryComponent,
     data: {
       authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'jhipsterFdcApp.category.home.title',
     },
     canActivate: [UserRouteAccessService],

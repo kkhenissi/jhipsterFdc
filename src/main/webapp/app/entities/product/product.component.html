@@ -21,20 +21,37 @@
     <div class="table-responsive" id="entities" *ngIf="products && products.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.product.nameProduct">Name Product</span></th>
-                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.product.descriptionProduct">Description Product</span></th>
-                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.product.priceProduct">Price Product</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="name"><span jhiTranslate="jhipsterFdcApp.product.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="description"><span jhiTranslate="jhipsterFdcApp.product.description">Description</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="image"><span jhiTranslate="jhipsterFdcApp.product.image">Image</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="price"><span jhiTranslate="jhipsterFdcApp.product.price">Price</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="size"><span jhiTranslate="jhipsterFdcApp.product.size">Size</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="availableUntil"><span jhiTranslate="jhipsterFdcApp.product.availableUntil">Available Until</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="brand.name"><span jhiTranslate="jhipsterFdcApp.product.brand">Brand</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
                 <tr *ngFor="let product of products ;trackBy: trackId">
                     <td><a [routerLink]="['/product', product.id, 'view']">{{ product.id }}</a></td>
-                    <td>{{ product.nameProduct }}</td>
-                    <td>{{ product.descriptionProduct }}</td>
-                    <td>{{ product.priceProduct }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>
+                        <a *ngIf="product.image" (click)="openFile(product.imageContentType, product.image)">
+                            <img [src]="'data:' + product.imageContentType + ';base64,' + product.image" style="max-height: 30px;" alt="product image"/>
+                        </a>
+                        <span *ngIf="product.image">{{ product.imageContentType }}, {{ byteSize(product.image) }}</span>
+                    </td>
+                    <td>{{ product.price }}</td>
+                    <td jhiTranslate="{{ 'jhipsterFdcApp.Size.' + product.size }}">{{ product.size }}</td>
+                    <td>{{ product.availableUntil | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="product.brand">
+                            <a [routerLink]="['/brand', product.brand?.id, 'view']" >{{ product.brand?.name }}</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

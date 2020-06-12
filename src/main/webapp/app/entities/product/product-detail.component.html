@@ -8,17 +8,46 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="jhipsterFdcApp.product.nameProduct">Name Product</span></dt>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.name">Name</span></dt>
                 <dd>
-                    <span>{{ product.nameProduct }}</span>
+                    <span>{{ product.name }}</span>
                 </dd>
-                <dt><span jhiTranslate="jhipsterFdcApp.product.descriptionProduct">Description Product</span></dt>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.description">Description</span></dt>
                 <dd>
-                    <span>{{ product.descriptionProduct }}</span>
+                    <span>{{ product.description }}</span>
                 </dd>
-                <dt><span jhiTranslate="jhipsterFdcApp.product.priceProduct">Price Product</span></dt>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.image">Image</span></dt>
                 <dd>
-                    <span>{{ product.priceProduct }}</span>
+                    <div *ngIf="product.image">
+                        <a (click)="openFile(product.imageContentType, product.image)">
+                            <img [src]="'data:' + product.imageContentType + ';base64,' + product.image" style="max-width: 100%;" alt="product image"/>
+                        </a>
+                        {{ product.imageContentType }}, {{ byteSize(product.image) }}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.price">Price</span></dt>
+                <dd>
+                    <span>{{ product.price }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.size">Size</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'jhipsterFdcApp.Size.' + product.size }}">{{ product.size }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.availableUntil">Available Until</span></dt>
+                <dd>
+                    <span>{{ product.availableUntil }}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.subcategory">Subcategory</span></dt>
+                <dd>
+                    <span *ngFor="let subcategory of product.subcategories; let last = last">
+                        <a [routerLink]="['/sub-category', subcategory?.id, 'view']">{{ subcategory.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterFdcApp.product.brand">Brand</span></dt>
+                <dd>
+                    <div *ngIf="product.brand">
+                        <a [routerLink]="['/brand', product.brand?.id, 'view']">{{ product.brand?.name }}</a>
+                    </div>
                 </dd>
             </dl>
 

@@ -11,25 +11,52 @@
         Added the entity Product.
     -->
     <changeSet id="20200611174606-1" author="jhipster">
-        <createTable tableName="product" remarks="Task entity.\n@author The JHipster team.">
+        <createTable tableName="product">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name_product" type="varchar(255)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="description_product" type="varchar(255)">
+            <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="price_product" type="double">
+            <column name="image" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="image_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="price" type="decimal(21,2)">
+                <constraints nullable="true" />
+            </column>
+            <column name="size" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="available_until" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="brand_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="product" columnName="available_until" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="20200611174606-1-relations" author="jhipster">
 
+        <createTable tableName="product_subcategory">
+            <column name="subcategory_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="product_id, subcategory_id" tableName="product_subcategory"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
@@ -47,9 +74,13 @@
                   separator=";"
                   tableName="product">
             <column name="id" type="numeric"/>
-            <column name="name_product" type="string"/>
-            <column name="description_product" type="string"/>
-            <column name="price_product" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="description" type="string"/>
+            <column name="image" type="blob"/>
+            <column name="image_content_type" type="string"/>
+            <column name="price" type="numeric"/>
+            <column name="size" type="string"/>
+            <column name="available_until" type="datetime"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

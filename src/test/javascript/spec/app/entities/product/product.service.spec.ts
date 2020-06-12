@@ -1,7 +1,10 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ProductService } from 'app/entities/product/product.service';
 import { IProduct, Product } from 'app/shared/model/product.model';
+import { Size } from 'app/shared/model/enumerations/size.model';
 
 describe('Service Tests', () => {
   describe('Product Service', () => {
@@ -10,6 +13,7 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: IProduct;
     let expectedResult: IProduct | IProduct[] | boolean | null;
+    let currentDate: moment.Moment;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -19,13 +23,19 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(ProductService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
-      elemDefault = new Product(0, 'AAAAAAA', 'AAAAAAA', 0);
+      elemDefault = new Product(0, 'AAAAAAA', 'AAAAAAA', 'image/png', 'AAAAAAA', 0, Size.S, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            availableUntil: currentDate.format(DATE_TIME_FORMAT),
+          },
+          elemDefault
+        );
 
         service.find(123).subscribe(resp => (expectedResult = resp.body));
 
@@ -38,11 +48,17 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
+            availableUntil: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            availableUntil: currentDate,
+          },
+          returnedFromService
+        );
 
         service.create(new Product()).subscribe(resp => (expectedResult = resp.body));
 
@@ -54,14 +70,22 @@ describe('Service Tests', () => {
       it('should update a Product', () => {
         const returnedFromService = Object.assign(
           {
-            nameProduct: 'BBBBBB',
-            descriptionProduct: 'BBBBBB',
-            priceProduct: 1,
+            name: 'BBBBBB',
+            description: 'BBBBBB',
+            image: 'BBBBBB',
+            price: 1,
+            size: 'BBBBBB',
+            availableUntil: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            availableUntil: currentDate,
+          },
+          returnedFromService
+        );
 
         service.update(expected).subscribe(resp => (expectedResult = resp.body));
 
@@ -73,14 +97,22 @@ describe('Service Tests', () => {
       it('should return a list of Product', () => {
         const returnedFromService = Object.assign(
           {
-            nameProduct: 'BBBBBB',
-            descriptionProduct: 'BBBBBB',
-            priceProduct: 1,
+            name: 'BBBBBB',
+            description: 'BBBBBB',
+            image: 'BBBBBB',
+            price: 1,
+            size: 'BBBBBB',
+            availableUntil: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            availableUntil: currentDate,
+          },
+          returnedFromService
+        );
 
         service.query().subscribe(resp => (expectedResult = resp.body));
 

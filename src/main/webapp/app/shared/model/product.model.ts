@@ -1,10 +1,32 @@
+import { Moment } from 'moment';
+import { ISubCategory } from 'app/shared/model/sub-category.model';
+import { IBrand } from 'app/shared/model/brand.model';
+import { Size } from 'app/shared/model/enumerations/size.model';
+
 export interface IProduct {
   id?: number;
-  nameProduct?: string;
-  descriptionProduct?: string;
-  priceProduct?: number;
+  name?: string;
+  description?: string;
+  imageContentType?: string;
+  image?: any;
+  price?: number;
+  size?: Size;
+  availableUntil?: Moment;
+  subcategories?: ISubCategory[];
+  brand?: IBrand;
 }
 
 export class Product implements IProduct {
-  constructor(public id?: number, public nameProduct?: string, public descriptionProduct?: string, public priceProduct?: number) {}
+  constructor(
+    public id?: number,
+    public name?: string,
+    public description?: string,
+    public imageContentType?: string,
+    public image?: any,
+    public price?: number,
+    public size?: Size,
+    public availableUntil?: Moment,
+    public subcategories?: ISubCategory[],
+    public brand?: IBrand
+  ) {}
 }

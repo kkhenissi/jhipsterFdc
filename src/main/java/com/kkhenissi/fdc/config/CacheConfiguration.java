@@ -65,6 +65,12 @@ public class CacheConfiguration {
             createCache(cm, com.kkhenissi.fdc.domain.Photo.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.UserFdc.class.getName());
             createCache(cm, com.kkhenissi.fdc.domain.Item.class.getName() + ".photos");
+            createCache(cm, com.kkhenissi.fdc.domain.Brand.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.Brand.class.getName() + ".products");
+            createCache(cm, com.kkhenissi.fdc.domain.Product.class.getName() + ".subcategories");
+            createCache(cm, com.kkhenissi.fdc.domain.Category.class.getName() + ".subcategories");
+            createCache(cm, com.kkhenissi.fdc.domain.SubCategory.class.getName());
+            createCache(cm, com.kkhenissi.fdc.domain.SubCategory.class.getName() + ".products");
             // jhipster-needle-ehcache-add-entry
         };
     }

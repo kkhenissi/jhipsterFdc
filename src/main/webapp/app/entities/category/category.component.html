@@ -21,16 +21,18 @@
     <div class="table-responsive" id="entities" *ngIf="categories && categories.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="jhipsterFdcApp.category.nameCategory">Name Category</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="name"><span jhiTranslate="jhipsterFdcApp.category.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="status"><span jhiTranslate="jhipsterFdcApp.category.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let category of categories ;trackBy: trackId">
                     <td><a [routerLink]="['/category', category.id, 'view']">{{ category.id }}</a></td>
-                    <td>{{ category.nameCategory }}</td>
+                    <td>{{ category.name }}</td>
+                    <td jhiTranslate="{{ 'jhipsterFdcApp.CategoryStatus.' + category.status }}">{{ category.status }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
@@ -57,5 +59,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="categories && categories.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>
