@@ -21,6 +21,9 @@
         "photo": "Photo",
         "userFdc": "User Fdc",
         "brand": "Brand",
+        "commerce": "Commerce",
+        "ecommerce": "E-Commerce",
+        "dashboad": "Dashboad",
         "subCategory": "Sub Category",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
